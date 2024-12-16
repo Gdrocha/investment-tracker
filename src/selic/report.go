@@ -13,7 +13,7 @@ type SelicData struct {
 }
 
 func ReportSelicRate() {
-	cachePath := "src/selic/cache/.lastSelicRate.json"
+	cachePath := "src/selic/cache/.cache.json"
 	lastRate, err := ReadLastSelicRate(cachePath)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func ReportSelicRate() {
 
 		if newRate.Value == lastRate.Value {
 			fmt.Printf("Selic rate unchanged. Storing current value into cache. Rate: %s%%\n", newRate.Value)
-			err := UpdateLastSelicRate("src/selic/cache/.lastSelicRate.json", newRate)
+			err := UpdateLastSelicRate(cachePath, newRate)
 
 			if err != nil {
 				fmt.Println("Error updating the last Selic rate:", err)
@@ -42,7 +42,7 @@ func ReportSelicRate() {
 		} else {
 			fmt.Printf("Selic rate changed! Old: %s%%, New: %s%%\n", lastRate.Value, newRate.Value)
 
-			err := UpdateLastSelicRate("src/selic/cache/.lastSelicRate.json", newRate)
+			err := UpdateLastSelicRate(cachePath, newRate)
 
 			if err != nil {
 				fmt.Println("Error updating the last Selic rate:", err)
