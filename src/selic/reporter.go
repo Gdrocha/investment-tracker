@@ -13,8 +13,17 @@ type SelicReporter struct{}
 
 func (f *SelicReporter) Report() {
 	var selicFetcher SelicFetcher
+	appCacheBaseLocation := os.TempDir() + "/investment-tracker/selic"
 
-	cachePath := "src/selic/.cache.json"
+	err := os.MkdirAll(appCacheBaseLocation, 0755)
+
+	if err != nil {
+		println(fmt.Errorf("failed to create directory: %v", err))
+		return
+	}
+
+	cachePath := appCacheBaseLocation + "/.cache.json"
+
 	lastRate, err := ReadLastSelicRate(cachePath)
 
 	if err != nil {
@@ -69,6 +78,7 @@ func UpdateLastSelicRate(filePath string, lastRate SelicResponseData, newRate Se
 	}
 
 	err = os.WriteFile(filePath, data, 0644)
+
 	return err
 }
 
