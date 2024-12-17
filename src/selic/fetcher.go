@@ -6,7 +6,9 @@ import (
 	"net/http"
 )
 
-func FetchSelicRate(startDate, endDate string) ([]SelicData, error) {
+type SelicFetcher struct{}
+
+func (f *SelicFetcher) Fetch(startDate, endDate string) ([]SelicResponseData, error) {
 	println("Fetching selic rate")
 	url := fmt.Sprintf("https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=%s&dataFinal=%s", startDate, endDate)
 
@@ -18,7 +20,7 @@ func FetchSelicRate(startDate, endDate string) ([]SelicData, error) {
 
 	defer resp.Body.Close()
 
-	var selicRates []SelicData
+	var selicRates []SelicResponseData
 
 	if err := json.NewDecoder(resp.Body).Decode(&selicRates); err != nil {
 		return nil, err
